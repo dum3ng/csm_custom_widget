@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@title@</title>
+        <style>
+            .none {
+                display: none;
+            }
+        </style>
+        @scripts@
+        <script type="text/javascript" src="js/jquery.knob.min.js"></script>
+        @simulation_js@
+    </head>
+
+    <body class="widget" paths="@paths@">
+        <input
+            type="text"
+            class="dial"
+            runtime="true"
+            pathType="widget"
+            paths="value"
+        />
+        <input class="none" paths="max" pathType="widget" runtime="true" />
+
+        <script>
+            $(function () {
+                $('.dial').knob({
+                    min: $min$,
+                    max: $max$,
+                    release: function (value) {
+                        //call the doSetWidgetValue method to set a simulation value.
+                        doSetWidgetValue($('.dial'), value)
+                    },
+                })
+            })
+            /**
+             * This method will be called when a value of the widget element is changed.
+             * @param item is an element with matching attribute paths in the body and the element itself.
+             * @param data represents a new value.
+             * @param formattedValue indicates a new value formatted by the simulation web server.
+             */
+
+            function customSetHTMLValue(item, data, formattedValue) {
+                if ($(item).is($('.dial'))) {
+                    $(item).val(data).trigger('change')
+                }
+                if ($(item).is($('.none'))) {
+                    $('.dial').trigger('configure', {
+                        max: data,
+                    })
+                    $('.dial').trigger('change')
+                }
+                console.log(item)
+                console.log(data)
+                console.log(formattedValue)
+            }
+        </script>
+    </body>
+</html>
